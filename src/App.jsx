@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 
 class App extends Component {
-  state = {
-    message: "Hello World from Component State"
-  }
+
   render() {
     return (
       <>
-        <h1>{this.state.message}</h1>
+        <h1>{this.props.message}</h1>
       </>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    message: state.message
+  }
+}
+
+export default connect(mapStateToProps)(App);
