@@ -8,7 +8,15 @@ const rootReducer = (state = initialState, action) => {
     }
   } else if (action.type === 'RESET_MESSAGE') {
     return initialState
-  } else {
+  } else if (action.type === 'SET_GEOLOCATION') {
+    debugger
+    return {
+      ...state,
+      coords: action.payload
+    }
+  }
+
+  else {
     return state
   }
 

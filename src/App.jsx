@@ -1,48 +1,44 @@
 import React, { Component } from 'react';
+import ChangeMessageForm from './ChangeMessageForm'
+import DisplayMessage from './DisplayMessage'
 import { connect } from 'react-redux'
 
 class App extends Component {
 
-  changeMessage = event => {
-    event.preventDefault()
-    let newMessage = event.target.newMessage.value
-    event.target.newMessage.value = ''
-    this.props.changeMessage(newMessage)
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(position => {
+      let coords = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      }
+      this.props.dispatch({ type: 'SET_GEOLOCATION', payload: coords })
+    })
   }
+
 
   render() {
     return (
       <>
-        <h1>{this.props.message}</h1>
-        <form onSubmit={this.changeMessage}>
-          <input type="text" name="newMessage" placeholder="Type a message" />
-          <input type="submit" value="Change message" />
-        </form>
-        <button
+        <DisplayMessage timeout={5000} />
+        <ChangeMessageForm />
+        {/* <button
           onClick={() => this.props.changeMessage('Hello Venus')}
         >Change message
         </button>
-        <button
-          onClick={() => this.props.resetMessage()}
-        >Reset
-        </button>
+         */}
       </>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    message: state.message
-  }
-}
 
-const mapDispatchToProps = dispatch => {
-  return {
-    resetMessage: () => { dispatch({ type: 'RESET_MESSAGE' }) },
-    changeMessage: message => { dispatch({ type: 'CHANGE_MESSAGE', payload: message }) }
-  }
-}
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     resetMessage: () => { dispatch({ type: 'RESET_MESSAGE' }) },
+//     changeMessage: message => { dispatch({ type: 'CHANGE_MESSAGE', payload: message }) }
+//   }
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
-// export default App
+// export default connect(null, mapDispatchToProps)(App);
+
+export default connect()(App)
