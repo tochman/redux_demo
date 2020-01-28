@@ -1,6 +1,5 @@
 const initialState = {
-  message: "Hello World from Redux",
-  coords: null
+  location: null
 }
 
 export default initialState
