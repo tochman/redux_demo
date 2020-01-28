@@ -1,4 +1,5 @@
 import initialState from '../store/initialState'
+import convertToDMS from '../../services/convertToDMS'
 
 const rootReducer = (state = initialState, action) => {
   if (action.type === 'CHANGE_MESSAGE') {
@@ -8,7 +9,16 @@ const rootReducer = (state = initialState, action) => {
     }
   } else if (action.type === 'RESET_MESSAGE') {
     return initialState
-  } else {
+  } else if (action.type === 'SET_LOCATION') {
+    let {components, geometry} = action.payload
+    let dms = convertToDMS(geometry)
+    return {
+      ...state,
+      location: {...components, ...geometry, dms: dms}
+    }
+  }
+
+  else {
     return state
   }
 

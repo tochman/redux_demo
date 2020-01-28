@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import openCageWrapper from './services/openCageWrapper'
 
 class App extends Component {
+
+  componentDidMount() {
+    this.getLocation()
+  }
+
+  getLocation() {
+    navigator.geolocation.getCurrentPosition(async position => {
+      let location = await openCageWrapper(position.coords.latitude, position.coords.longitude)
+      this.props.setLocation(location)
+    })
+  }
+
 
   changeMessage = event => {
     event.preventDefault()
@@ -13,19 +26,13 @@ class App extends Component {
   render() {
     return (
       <>
-        <h1>{this.props.message}</h1>
-        <form onSubmit={this.changeMessage}>
-          <input type="text" name="newMessage" placeholder="Type a message" />
-          <input type="submit" value="Change message" />
-        </form>
-        <button
-          onClick={() => this.props.changeMessage('Hello Venus')}
-        >Change message
-        </button>
-        <button
-          onClick={() => this.props.resetMessage()}
-        >Reset
-        </button>
+        {this.props.location &&
+          <div id="location-display">
+            <h1>Hello visitor from {this.props.location.city || this.props.location.town}</h1>
+            <p>You are sailing at {this.props.location.dms}</p>
+          </div>
+        }
+
       </>
     );
   }
@@ -33,12 +40,13 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    message: state.message
+    location: state.location
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
+    setLocation: (location) => { dispatch({ type: 'SET_LOCATION', payload: location }) },
     resetMessage: () => { dispatch({ type: 'RESET_MESSAGE' }) },
     changeMessage: message => { dispatch({ type: 'CHANGE_MESSAGE', payload: message }) }
   }
