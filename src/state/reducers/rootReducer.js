@@ -12,7 +12,6 @@ const rootReducer = (state = initialState, action) => {
   } else if (action.type === 'SET_LOCATION') {
     let {components, geometry} = action.payload
     let dms = convertToDMS(geometry)
-    debugger
     return {
       ...state,
       location: {...components, ...geometry, dms: dms}
